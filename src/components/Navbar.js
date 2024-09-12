@@ -3,7 +3,7 @@ import {  useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
-import { MdShoppingCart,  MdAddCircle } from "react-icons/md";
+import { MdShoppingCart,  MdAddCircle, MdHome } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { userActions } from "../store/userSlice";
 
@@ -35,6 +35,17 @@ const Navbar = () => {
               <img src="/Images/card.png" alt="" width="60" height="60" />
             </Link>
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ml-5">
+            <li>
+                    <Link
+                      to="/"
+                      className="nav-link px-2 text-white hover:underline hover:underline-white "
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        <MdHome />
+                        Home
+                      </div>
+                    </Link>
+                  </li>
 
               {currentUser && (
                 <>

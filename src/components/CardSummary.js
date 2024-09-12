@@ -47,6 +47,7 @@ const placeOrder=()=>{
               setIsOpen={setIsOpen}
               finalPayment={finalPayment}
               totalItemQty={totalItemQty}
+              shoppingCart={shoppingCart}
             />
             <button className="w-full tracking-[1px] text-sm rounded-md font-semibold bg-[rgb(255,63,108)] text-white cursor-pointer px-4 py-2.5 border-0" onClick={placeOrder}>
         <div className="css-xjhrni">PLACE ORDER</div>

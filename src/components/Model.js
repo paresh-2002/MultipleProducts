@@ -9,6 +9,7 @@ import {
 import { ref as dbRef, set, update } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import LoadingSpinner from "./LoadingSpinner";
 
 const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const closeModal = () => setIsOpen(false);
@@ -19,6 +20,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const [productImg, setProductImg] = useState(null);
   const [existingImg, setExistingImg] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (item) {
@@ -43,6 +45,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const { productName, productPrice } = formData;
     if (!productName || !productPrice) {
       setError("All fields must be filled correctly.");
@@ -56,13 +59,11 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
           await uploadBytes(imageRef, productImg);
           imageUrl = await getDownloadURL(imageRef);
         }
-
         await update(dbRef(db, `products/${item.id}`), {
           productName,
           productPrice: Number(productPrice),
           productImg: imageUrl,
         });
-
         toast.success("Product updated successfully");
       } else {
         const productId = uuidv4();
@@ -86,6 +87,8 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
       setExistingImg("");
       setError("");
       closeModal();
+
+      window.location.reload();
     } catch (error) {
       console.error("Error handling product:", error.message);
       setError("Failed to handle product. Please try again.");
@@ -117,7 +120,9 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
                   <MdClose />
                 </button>
               </div>
-              <h3 className="text-center">{item ? "Edit Product" : "Add Product"}</h3>
+              <h3 className="text-center">
+                {item ? "Edit Product" : "Add Product"}
+              </h3>
               <div className="max-w-md mx-auto mt-2 p-3">
                 <form
                   autoComplete="off"
@@ -184,7 +189,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
                     className="block w-full md:w-1/3 mx-auto p-2 rounded-md bg-cyan-800 text-white hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50"
                     type="submit"
                   >
-                    {item ? "Update" : "Add"}
+                    {loading ? <LoadingSpinner /> : item ? "Update" : "Add"}
                   </button>
                 </form>
                 {error && (

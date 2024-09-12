@@ -1,5 +1,5 @@
 import { MdClose } from "react-icons/md";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../FirebaseConfig";
 import { ref as dbRef, set } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
@@ -8,16 +8,34 @@ import LoadingSpinner from "./LoadingSpinner";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const Cashout = ({ setIsOpen, isOpen, finalPayment, totalItemQty }) => {
+const Cashout = ({
+  setIsOpen,
+  isOpen,
+  finalPayment,
+  totalItemQty,
+  shoppingCart,
+}) => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const closeModal = () => setIsOpen(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
   const [orderData, setOrderData] = useState({
     number: "",
     address: "",
   });
+
+  useEffect(() => {
+    if (Array.isArray(shoppingCart)) {
+      const extractedProducts = shoppingCart.map((product) => ({
+        productQty: product.qty || "",
+        productName: product.productName || "",
+        productImg: product.productImg || "",
+      }));
+      setProducts(extractedProducts);
+    }
+  }, [shoppingCart]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -33,25 +51,29 @@ const Cashout = ({ setIsOpen, isOpen, finalPayment, totalItemQty }) => {
     e.preventDefault();
     setLoading(true);
     const { number, address } = orderData;
-    const userName = currentUser.name;
-    const email = currentUser.email;
+
+    const userName = currentUser?.name;
+    const email = currentUser?.email;
+
     if (!userName || !email || !number || !address) {
       setError("All fields must be filled correctly.");
       setLoading(false);
       return;
     }
+
     if (!isValidNumber(number)) {
       setError("The number must be a valid 10-digit number.");
       setLoading(false);
       return;
     }
+    const productId = uuidv4();
     try {
-      const productId = uuidv4();
       const productData = {
         id: productId,
         userName,
         email,
         number: Number(number),
+        products,
         finalPayment,
         totalItemQty,
         address,
@@ -60,12 +82,15 @@ const Cashout = ({ setIsOpen, isOpen, finalPayment, totalItemQty }) => {
       await set(dbRef(db, `orderUserData/${productId}`), productData);
       setOrderData({ number: "", address: "" });
       setError("");
-      toast.success("Your order has been placed successfully. Thanks for visiting us");
+      toast.success(
+        "Your order has been placed successfully. Thanks for visiting us"
+      );
       closeModal();
-      navigate('/')
+      navigate("/");
+      // window.location.reload();
     } catch (error) {
-      console.error("Error adding product:", error.message);
-      setError("Failed to place order. Please try again.");
+      console.error("Error adding product:", error);
+      setError(error.message || "Failed to place order. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -140,7 +165,7 @@ const Cashout = ({ setIsOpen, isOpen, finalPayment, totalItemQty }) => {
                       htmlFor="number"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Number
+                      Phone Number
                     </label>
                     <input
                       type="number"
