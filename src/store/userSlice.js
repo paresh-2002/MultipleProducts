@@ -7,7 +7,6 @@ import Cookies from 'js-cookie';
 const INITIAL_STATE = {
   currentUser: (() => {
     try {
-      // Retrieve from cookies as a fallback
       const cookieUser = Cookies.get("user");
       return cookieUser ? JSON.parse(cookieUser) : null;
     } catch (error) {
@@ -45,7 +44,7 @@ const userSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.currentUser = null;
-      Cookies.remove("user"); // Remove cookie
+      Cookies.remove("user");
       toast.success("Logged out successfully");
     },
   },
@@ -58,7 +57,7 @@ const userSlice = createSlice({
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.currentUser = action.payload;
-        Cookies.set("user", JSON.stringify(action.payload), { expires: 1 }); // Cookie expires in one day
+        Cookies.set("user", JSON.stringify(action.payload), { expires: 1 });
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.status = 'failed';

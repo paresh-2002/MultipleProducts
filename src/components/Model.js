@@ -65,7 +65,6 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
 
         toast.success("Product updated successfully");
       } else {
-        // Add new product
         const productId = uuidv4();
         const imageRef = storageRef(storage, `images/${productId}`);
         await uploadBytes(imageRef, productImg);

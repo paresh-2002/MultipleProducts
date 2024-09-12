@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const fetchStatusSlice = createSlice({
   name: "fetchStatus",
   initialState: {
-    fetchDone: false, // false: 'PENDING' snd true: 'DONE'
+    fetchDone: false,
     currentlyFetching: false,
   },
   reducers: {

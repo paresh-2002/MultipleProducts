@@ -3,7 +3,7 @@ import CardSummary from "../components/CardSummary";
 import OrderItems from "../components/OrderItems";
 import { useEffect, useMemo, useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
-import debounce from "lodash.debounce"; // Ensure lodash.debounce is installed
+import debounce from "lodash.debounce";
 
 const Card = () => {
   const { shoppingCart } = useSelector((store) => store.order);
