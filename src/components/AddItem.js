@@ -53,6 +53,7 @@ const AddItem = () => {
       setProduct({ productName: "", productPrice: "" });
       setProductImg(null);
       setError("");
+      document.getElementById('product_img').value = '';
       toast.success("Product added successfully");
     } catch (error) {
       console.error("Error adding product:", error.message);

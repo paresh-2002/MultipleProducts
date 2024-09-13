@@ -87,7 +87,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
       setExistingImg("");
       setError("");
       closeModal();
-
+      document.getElementById('productImg').value = '';
       window.location.reload();
     } catch (error) {
       console.error("Error handling product:", error.message);
