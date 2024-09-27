@@ -8,10 +8,13 @@ import { OrderActions } from "../store/orderSlice";
 
 const HomeItem = ({ item }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const { shoppingCart } = useSelector((store) => store.order);
+  const existingItem = shoppingCart.find(cartItem => cartItem.id === item.id);
   const [isOpen, setIsOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+console.log(existingItem);
 
   const handleAddToOrder = () => {
     if (!currentUser) {
@@ -42,10 +45,10 @@ const HomeItem = ({ item }) => {
       </div>
       <div className="flex justify-between items-center m-2 gap-2">
         <button
-          className={`btn w-full btn-primary`}
+          className={`btn w-full btn-primary ${existingItem && 'disabled'}`}
           onClick={handleAddToOrder}
         >
-          Order Now
+          {existingItem ? "Go to Bag" : "Add to Bag"}
         </button>
         {currentUser && (
           <>
