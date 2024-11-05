@@ -3,6 +3,7 @@ import itemsSlice from "./itemsSlice";
 import fetchStatusSlice from "./fetchStatusSlice";
 import orderSlice from "./orderSlice";
 import userSlice from "./userSlice";
+import userOrderSlice from "./userOrderSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     fetchStatus: fetchStatusSlice.reducer,
     order: orderSlice.reducer,
     user: userSlice.reducer,
+    userOrder: userOrderSlice.reducer
   },
 });
 

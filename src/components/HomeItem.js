@@ -14,12 +14,11 @@ const HomeItem = ({ item }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-console.log(existingItem);
 
   const handleAddToOrder = () => {
     if (!currentUser) {
       toast.info("Please Login to add Order");
-      navigate('/users/sign_in');
+      navigate('/users/sign-in');
     } else {
       dispatch(OrderActions.addToOrder({ id: item.id, item }));
     }
@@ -28,6 +27,7 @@ console.log(existingItem);
   const handleEdit = () => {
     setCurrentItem(item);
     setIsOpen(true);
+    console.log(isOpen)
   };
 
   return (
@@ -37,6 +37,9 @@ console.log(existingItem);
           className="card-img-top"
           src={item.productImg}
           alt={item.productName}
+          onClick={() => {navigate(`/productInfo/${item.id}`)
+        }
+        }
         />
       </div>
       <div className="card-body">
@@ -50,7 +53,7 @@ console.log(existingItem);
         >
           {existingItem ? "Go to Bag" : "Add to Bag"}
         </button>
-        {currentUser && (
+        {currentUser && currentUser.role === 'admin' && (
           <>
             <AddItemModel
               isOpen={isOpen}

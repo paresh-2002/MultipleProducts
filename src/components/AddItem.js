@@ -9,16 +9,29 @@ import { ref as dbRef, set } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSpinner from "./LoadingSpinner";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+const categoryList = [
+  { name: "fashion" },
+  { name: "shirt" },
+  { name: "jacket" },
+  { name: "mobile" },
+  { name: "laptop" },
+  { name: "shoes" },
+  { name: "home" },
+  { name: "books" },
+];
 
 const AddItem = () => {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState({
     productName: "",
     productPrice: "",
+    category: "",
   });
   const [productImg, setProductImg] = useState(null);
   const [error, setError] = useState("");
-
+const navigate = useNavigate()
   const ProductImgHandler = (e) => {
     if (e.target.files[0]) {
       setProductImg(e.target.files[0]);
@@ -29,7 +42,7 @@ const AddItem = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { productName, productPrice } = product;
+    const { productName, productPrice, category } = product;
     if (!productName || !productPrice || !productImg) {
       setError("All fields must be filled correctly.");
       setLoading(false);
@@ -47,14 +60,15 @@ const AddItem = () => {
         productName,
         productPrice: Number(productPrice),
         productImg: url,
+        category,
       };
-
       await set(dbRef(db, `products/${productId}`), productData);
       setProduct({ productName: "", productPrice: "" });
       setProductImg(null);
       setError("");
-      document.getElementById('product_img').value = '';
+      document.getElementById("product_img").value = "";
       toast.success("Product added successfully");
+      navigate("/admin-dashboard");
     } catch (error) {
       console.error("Error adding product:", error.message);
       setError("Failed to add product. Please try again.");
@@ -65,7 +79,7 @@ const AddItem = () => {
 
   return (
     <div className="container px-4 md:px-6 lg:px-8">
-      <div className="top-[92px] sticky z-10 bg-white">
+      <div className="top-[92px] sticky bg-white">
         <h2 className="text-2xl mt-2 h-[92px] lg:h-[30px] flex items-center justify-center md:flex-col md:items-start md:justify-start">
           ADD PRODUCTS
         </h2>
@@ -73,10 +87,10 @@ const AddItem = () => {
       </div>
       <div className="max-w-md mx-auto mt-6">
         <form autoComplete="off" onSubmit={addProduct} className="space-y-4">
-          <div>
+          <div className="mb-3">
             <label
               htmlFor="product_name"
-              className="block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-gray-700"
             >
               Product Name
             </label>
@@ -91,10 +105,11 @@ const AddItem = () => {
               }
             />
           </div>
-          <div>
+
+          <div className="mb-3">
             <label
               htmlFor="product_price"
-              className="block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-gray-700"
             >
               Product Price
             </label>
@@ -109,10 +124,32 @@ const AddItem = () => {
               }
             />
           </div>
-          <div>
+          <div className="mb-3">
+            <label
+              htmlFor="product_price"
+              className="mb-2 block text-sm  font-medium text-gray-700"
+            >
+              Product Category
+            </label>
+            <select
+              value={product.category}
+              onChange={(e) =>
+                setProduct({ ...product, category: e.target.value })
+              }
+              className="form-control w-full mb-3 border-2 cursor-pointer border-gray-300 rounded-md p-2 outline-none focus:border-cyan-500 focus:ring focus:ring-cyan-200 focus:ring-opacity-50"
+            >
+              <option disabled>Select Product Category</option>
+              {categoryList.map((value, index) => (
+                <option key={index} value={value.name}>
+                  {value.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-3">
             <label
               htmlFor="product_img"
-              className="block text-sm font-medium text-gray-700"
+              className="mb-2 block text-sm font-medium text-gray-700"
             >
               Product Image
             </label>

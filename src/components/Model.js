@@ -11,11 +11,24 @@ import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./LoadingSpinner";
 
+const categoryList = [
+  { name: "fashion" },
+  { name: "shirt" },
+  { name: "jacket" },
+  { name: "mobile" },
+  { name: "laptop" },
+  { name: "shoes" },
+  { name: "home" },
+  { name: "books" },
+];
+
+
 const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const closeModal = () => setIsOpen(false);
   const [formData, setFormData] = useState({
     productName: "",
     productPrice: "",
+    category:'',
   });
   const [productImg, setProductImg] = useState(null);
   const [existingImg, setExistingImg] = useState("");
@@ -27,6 +40,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
       setFormData({
         productName: item.productName,
         productPrice: item.productPrice,
+        category: item.category,
       });
       setExistingImg(item.productImg);
     }
@@ -46,7 +60,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { productName, productPrice } = formData;
+    const { productName, productPrice, category } = formData;
     if (!productName || !productPrice) {
       setError("All fields must be filled correctly.");
       return;
@@ -62,6 +76,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
         await update(dbRef(db, `products/${item.id}`), {
           productName,
           productPrice: Number(productPrice),
+          category,
           productImg: imageUrl,
         });
         toast.success("Product updated successfully");
@@ -75,6 +90,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
           id: productId,
           productName,
           productPrice: Number(productPrice),
+          category,
           productImg: url,
         };
 
@@ -160,7 +176,28 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-
+                  <div className="mb-3">
+            <label
+              htmlFor="product_price"
+              className="mb-2 block text-sm  font-medium text-gray-700"
+            >
+              Product Category
+            </label>
+            <select
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+              className="form-control w-full mb-3 border-2 cursor-pointer border-gray-300 rounded-md p-2 outline-none focus:border-cyan-500 focus:ring focus:ring-cyan-200 focus:ring-opacity-50"
+            >
+              <option disabled>Select Product Category</option>
+              {categoryList.map((value, index) => (
+                <option key={index} value={value.name}>
+                  {value.name}
+                </option>
+              ))}
+            </select>
+          </div>
                   <div>
                     <label
                       htmlFor="productImg"

@@ -5,8 +5,8 @@ import { ref as dbRef, set } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./LoadingSpinner";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Cashout = ({
   setIsOpen,
@@ -24,14 +24,23 @@ const Cashout = ({
   const [orderData, setOrderData] = useState({
     number: "",
     address: "",
+    status: "confirmed",
+    date: new Date().toLocaleString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }),
   });
 
   useEffect(() => {
     if (Array.isArray(shoppingCart)) {
       const extractedProducts = shoppingCart.map((product) => ({
+        id:product.id,
+        category: product.category,
         productQty: product.qty || "",
         productName: product.productName || "",
         productImg: product.productImg || "",
+        productPrice: product.productPrice || "",
       }));
       setProducts(extractedProducts);
     }
@@ -46,15 +55,15 @@ const Cashout = ({
     const regex = /^[0-9]{10}$/;
     return regex.test(number);
   };
-
   const addProduct = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { number, address } = orderData;
+    const { number, address, status, date } = orderData;
 
     const userName = currentUser?.name;
     const email = currentUser?.email;
-
+    const userId = currentUser?.uid
+    
     if (!userName || !email || !number || !address) {
       setError("All fields must be filled correctly.");
       setLoading(false);
@@ -77,8 +86,10 @@ const Cashout = ({
         finalPayment,
         totalItemQty,
         address,
+        status,
+        date,
+        userId
       };
-
       await set(dbRef(db, `orderUserData/${productId}`), productData);
       setOrderData({ number: "", address: "" });
       setError("");

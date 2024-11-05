@@ -4,76 +4,81 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-}from "firebase/auth";
+} from "firebase/auth";
 import { auth, db } from "../FirebaseConfig";
 import { ref as dbRef, set } from "firebase/database";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { fetchUserData } from "../store/userSlice";
 
+const errorMessages = {
+  "auth/email-already-in-use": "The email address is already in use.",
+  "auth/invalid-email": "The email address is invalid.",
+  "auth/wrong-password": "The password is incorrect.",
+};
+
 const UserForm = ({ isSignInPage = false }) => {
-    const dispatch = useDispatch();
-    const [data, setData] = useState({
-    ...(!isSignInPage && { name: "" }),
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [data, setData] = useState({
+    ...(isSignInPage ? {} : { name: "" }),
     email: "",
     password: "",
+    role: "user",
+    date: new Date().toLocaleString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }),
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const navigate = useNavigate();
-  const handleSubmit = async (e ) => {
-    const { email, password } = data;
+  const [loading, setLoading] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-      try {
-        if (isSignInPage) {
-          const res = await signInWithEmailAndPassword(auth, email, password);
-          const user = res.user;
-          if (user) {
-            dispatch(fetchUserData({ uid: user.uid, email: user.email }));
-            navigate("/");
-          }
-        } else {
-          const res = await createUserWithEmailAndPassword(auth, email, password);
-          const user = res.user;
-    
-          if (user) {
-            await set(dbRef(db, `userData/${user.uid}`), { ...data });
-            toast.success("Account Created Successfully");
-            navigate("/users/sign_in");
-            setData({
-              ...(!isSignInPage && { name: "" }),
-              email: "",
-              password: "",
-            });
-          }
+    const { email, password, role, date } = data;
+
+    setLoading(true);
+    setError(""); // Reset error state
+
+    try {
+      if (isSignInPage) {
+        const res = await signInWithEmailAndPassword(auth, email, password);
+        const user = res.user;
+        if (user) {
+          dispatch(fetchUserData({ uid: user.uid, email: user.email, role }));
+          // localStorage.setItem("users", JSON.stringify(user));
+          navigate("/");
         }
-      } catch (error) {
-        console.error("Authentication Error:", error.code, error.message);
-        let errorMessage = "Authentication failed. Please check your credentials and try again.";
-    
-        if (error.code === "auth/email-already-in-use") {
-          errorMessage = "The email address is already in use.";
-        } else if (error.code === "auth/invalid-email") {
-          errorMessage = "The email address is invalid.";
-        } else if (error.code === "auth/wrong-password") {
-          errorMessage = "The password is incorrect.";
+      } else {
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        const user = res.user;
+
+        if (user) {
+          await set(dbRef(db, `userData/${user.uid}`), { ...data, uid:user.uid});
+          toast.success("Account Created Successfully");
+          navigate("/users/sign_in");
+          setData({ name: "", email: "", password: "", role, date });
         }
-        setError(errorMessage);
       }
-    };
+    } catch (error) {
+      console.error("Authentication Error:", error.code, error.message);
+      setError(errorMessages[error.code] || "Authentication failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="h-screen flex justify-center items-center">
       <div className="w-[400px] shadow-lg rounded-md p-5 flex flex-col">
         <div className="">
-          <img
-            src="/Images/card.png"
-            alt=""
-            width="80"
-            height="80"
-            className="m-auto"
-          />
+          <img src="/Images/card.png" alt="" width="80" height="80" className="m-auto" />
         </div>
         <h2 className="text-center font-medium text-3xl mb-2">
           {isSignInPage ? "Sign In" : "Sign Up"}
@@ -113,6 +118,7 @@ const UserForm = ({ isSignInPage = false }) => {
             <span
               onClick={togglePasswordVisibility}
               className="absolute right-2 top-3 cursor-pointer"
+              aria-label="Toggle password visibility"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
@@ -120,20 +126,16 @@ const UserForm = ({ isSignInPage = false }) => {
           <button
             className="text-decoration-none flex justify-center p-2 rounded-md w-full self-center bg-cyan-800 text-white hover:bg-cyan-900 mt-12"
             type="submit"
+            disabled={loading}
           >
-            <span>{isSignInPage ? "Sign In" : "Sign Up"}</span>
+            <span>{loading ? "Loading..." : (isSignInPage ? "Sign In" : "Sign Up")}</span>
           </button>
           {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
         </form>
         <p className="text-sm text-center mt-2">
           {isSignInPage ? "New account?" : "Already have an account?"}
-          <Link to={`/users/${isSignInPage ? "sign_up" : "sign_in"}`}>
-            <span
-              onClick={() =>
-                navigate(`/users/${isSignInPage ? "sign_up" : "sign_in"}`)
-              }
-              className="text-blue-500 underline cursor-pointer pl-2"
-            >
+          <Link to={`/users/${isSignInPage ? "sign-up" : "sign-in"}`}>
+            <span className="text-blue-500 underline cursor-pointer pl-2">
               {isSignInPage ? "Sign Up" : "Sign In"}
             </span>
           </Link>

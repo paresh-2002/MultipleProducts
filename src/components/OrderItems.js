@@ -1,9 +1,11 @@
 import { useDispatch } from "react-redux";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { OrderActions } from "../store/orderSlice";
+import { useNavigate } from "react-router-dom";
 
 const OrderItems = ({ item }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleRemoveItem = () => {
     try {
       dispatch(OrderActions.removeFromOrder({ id: item.id }));
@@ -31,7 +33,7 @@ const OrderItems = ({ item }) => {
   return (
     <div className="text-sm border rounded relative mb-2 pt-3 pb-0 px-3 border-solid border-[#eaeaec] bg-white">
       <div className="absolute h-[148px] w-[111px] bg-[#fff2df]">
-        <img className="card-img-top" src={item.productImg} alt={item.productName} />
+        <img className="card-img-top" src={item.productImg} alt={item.productName} onClick={() => {navigate(`/productInfo/${item.id}`)}}/>
       </div>
       <div className="relative min-h-[148px] ml-[111px] mb-3 pl-3">
         <div className="text-[#1a1b20] text-2xl leading-none overflow-hidden text-ellipsis whitespace-nowrap font-normal my-0">

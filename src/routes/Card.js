@@ -34,7 +34,7 @@ const Card = () => {
   return (
     <main className="container mx-auto px-4">
       <div className="max-w-full">
-        <div className="top-[92px] sticky z-10 bg-white">
+        <div className="top-[92px] z-1 sticky bg-white">
           <div className="flex flex-col lg:flex-row justify-between items-center mt-2">
             <h2 className="text-2xl font-semibold">PRODUCTS</h2>
             <div className="flex items-center">
@@ -58,7 +58,10 @@ const Card = () => {
         <div className="flex flex-col lg:flex-row mt-4">
           <div className="flex-1 lg:mr-4 text-gray-800 text-sm leading-relaxed pr-5 pt-8 border-b lg:border-b-0 lg:border-r border-gray-200 lg:pb-8">
             {loading ? (
-              <LoadingSpinner />
+              <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />
+              </div>
+              
             ) : filteredItems.length === 0 ? (
               <div className="flex items-center justify-center h-full">
                 <p className="text-gray-500">Product Not Found</p>
