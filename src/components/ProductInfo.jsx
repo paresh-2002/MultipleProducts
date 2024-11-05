@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { OrderActions } from "../store/orderSlice";
 import { get, ref } from "firebase/database";
 import { db } from "../FirebaseConfig";
+import { toast } from "react-toastify";
 
 const ProductInfo = () => {
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,8 @@ const ProductInfo = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((store) => store.order.shoppingCart);
   const [product, setProduct] = useState("");
-
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
   useEffect(() => {
     const getProductData = async () => {
       setLoading(true);
@@ -27,7 +29,12 @@ const ProductInfo = () => {
   }, [id]);
 
   const handleAddToOrder = () => {
-    dispatch(OrderActions.addToOrder({ id, item: product }));
+    if(!currentUser){
+      toast.info("Please Login to add Order");
+      navigate('/users/sign-in')
+    }else{
+      dispatch(OrderActions.addToOrder({ id, item: product }));
+    }
   };
   return (
     <section className="py-5 lg:py-16 font-poppins dark:bg-gray-800">
