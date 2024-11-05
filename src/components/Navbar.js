@@ -50,8 +50,7 @@ const Navbar = () => {
                   </div>
                 </Link>
               </li>
-              {currentUser && (
-                <>
+              
                 <li>
                   <Link
                     to="/all-products"
@@ -63,6 +62,8 @@ const Navbar = () => {
                       </div>
                   </Link>
                 </li>
+                {currentUser && (
+                <>
                 <li>
                   <Link
                     to="/orders"
