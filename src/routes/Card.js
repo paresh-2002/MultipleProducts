@@ -61,13 +61,14 @@ const Card = () => {
               <div className="flex items-center justify-center h-full">
                 <LoadingSpinner />
               </div>
-              
             ) : filteredItems.length === 0 ? (
               <div className="flex items-center justify-center h-full">
                 <p className="text-gray-500">Product Not Found</p>
               </div>
             ) : (
-              filteredItems.map((item) => <OrderItems key={item.id} item={item} />)
+              filteredItems.map((item) => (
+                <OrderItems key={item.id} item={item} />
+              ))
             )}
           </div>
           <div className="w-full lg:w-1/3 mt-4 lg:mt-0">

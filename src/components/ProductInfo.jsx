@@ -29,10 +29,10 @@ const ProductInfo = () => {
   }, [id]);
 
   const handleAddToOrder = () => {
-    if(!currentUser){
+    if (!currentUser) {
       toast.info("Please Login to add Order");
-      navigate('/users/sign-in')
-    }else{
+      navigate("/users/sign-in");
+    } else {
       dispatch(OrderActions.addToOrder({ id, item: product }));
     }
   };
@@ -132,7 +132,8 @@ const ProductInfo = () => {
                   <div className="flex flex-wrap items-center mb-6">
                     <button
                       className={`w-full px-4 py-3 text-center text-white bg-blue-400 border border--600  hover:bg-blue-300 hover:text-gray-100  rounded-xl ${
-                        cartItems && 'disabled'}`}
+                        cartItems && "disabled"
+                      }`}
                       onClick={handleAddToOrder}
                     >
                       {cartItems.some((p) => p.id === product.id)

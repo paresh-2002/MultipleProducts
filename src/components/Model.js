@@ -22,13 +22,12 @@ const categoryList = [
   { name: "books" },
 ];
 
-
 const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const closeModal = () => setIsOpen(false);
   const [formData, setFormData] = useState({
     productName: "",
     productPrice: "",
-    category:'',
+    category: "",
   });
   const [productImg, setProductImg] = useState(null);
   const [existingImg, setExistingImg] = useState("");
@@ -103,7 +102,7 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
       setExistingImg("");
       setError("");
       closeModal();
-      document.getElementById('productImg').value = '';
+      document.getElementById("productImg").value = "";
       window.location.reload();
     } catch (error) {
       console.error("Error handling product:", error.message);
@@ -177,27 +176,27 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
                     />
                   </div>
                   <div className="mb-3">
-            <label
-              htmlFor="product_price"
-              className="mb-2 block text-sm  font-medium text-gray-700"
-            >
-              Product Category
-            </label>
-            <select
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              className="form-control w-full mb-3 border-2 cursor-pointer border-gray-300 rounded-md p-2 outline-none focus:border-cyan-500 focus:ring focus:ring-cyan-200 focus:ring-opacity-50"
-            >
-              <option disabled>Select Product Category</option>
-              {categoryList.map((value, index) => (
-                <option key={index} value={value.name}>
-                  {value.name}
-                </option>
-              ))}
-            </select>
-          </div>
+                    <label
+                      htmlFor="product_price"
+                      className="mb-2 block text-sm  font-medium text-gray-700"
+                    >
+                      Product Category
+                    </label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                      className="form-control w-full mb-3 border-2 cursor-pointer border-gray-300 rounded-md p-2 outline-none focus:border-cyan-500 focus:ring focus:ring-cyan-200 focus:ring-opacity-50"
+                    >
+                      <option disabled>Select Product Category</option>
+                      {categoryList.map((value, index) => (
+                        <option key={index} value={value.name}>
+                          {value.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <div>
                     <label
                       htmlFor="productImg"

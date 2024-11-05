@@ -31,17 +31,17 @@ const MenuDropdown = ({ navigate, handleLogout, shoppingCart }) => {
             </li>
             {currentUser?.role === "admin" ? (
               <>
-            <li onClick={() => navigate("/add-item")}>
-              <span className="flex items-center px-5 py-3 hover:bg-amber-100 ">
-                <MdAddCircle className="text-lg me-3" /> Add Item
-              </span>
-            </li>
-            
-              <li onClick={() => navigate("/admin-dashboard")}>
-                <span className="flex items-center px-5 py-3 hover:bg-amber-100 ">
-                  <IoMdPerson className="text-lg me-3" /> Admin
-                </span>
-              </li>
+                <li onClick={() => navigate("/add-item")}>
+                  <span className="flex items-center px-5 py-3 hover:bg-amber-100 ">
+                    <MdAddCircle className="text-lg me-3" /> Add Item
+                  </span>
+                </li>
+
+                <li onClick={() => navigate("/admin-dashboard")}>
+                  <span className="flex items-center px-5 py-3 hover:bg-amber-100 ">
+                    <IoMdPerson className="text-lg me-3" /> Admin
+                  </span>
+                </li>
               </>
             ) : (
               <li onClick={() => navigate("/user-dashboard")}>

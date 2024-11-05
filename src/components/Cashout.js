@@ -35,7 +35,7 @@ const Cashout = ({
   useEffect(() => {
     if (Array.isArray(shoppingCart)) {
       const extractedProducts = shoppingCart.map((product) => ({
-        id:product.id,
+        id: product.id,
         category: product.category,
         productQty: product.qty || "",
         productName: product.productName || "",
@@ -62,8 +62,8 @@ const Cashout = ({
 
     const userName = currentUser?.name;
     const email = currentUser?.email;
-    const userId = currentUser?.uid
-    
+    const userId = currentUser?.uid;
+
     if (!userName || !email || !number || !address) {
       setError("All fields must be filled correctly.");
       setLoading(false);
@@ -88,7 +88,7 @@ const Cashout = ({
         address,
         status,
         date,
-        userId
+        userId,
       };
       await set(dbRef(db, `orderUserData/${productId}`), productData);
       setOrderData({ number: "", address: "" });

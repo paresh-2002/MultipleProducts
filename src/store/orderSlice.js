@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 const initialState = {
   shoppingCart: [],
-  userOrderList:[],
+  userOrderList: [],
   totalPrice: 0,
   totalQty: 0,
 };

@@ -9,7 +9,7 @@ import { OrderActions } from "../store/orderSlice";
 const HomeItem = ({ item }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const { shoppingCart } = useSelector((store) => store.order);
-  const existingItem = shoppingCart.find(cartItem => cartItem.id === item.id);
+  const existingItem = shoppingCart.find((cartItem) => cartItem.id === item.id);
   const [isOpen, setIsOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const HomeItem = ({ item }) => {
   const handleAddToOrder = () => {
     if (!currentUser) {
       toast.info("Please Login to add Order");
-      navigate('/users/sign-in');
+      navigate("/users/sign-in");
     } else {
       dispatch(OrderActions.addToOrder({ id: item.id, item }));
     }
@@ -27,7 +27,7 @@ const HomeItem = ({ item }) => {
   const handleEdit = () => {
     setCurrentItem(item);
     setIsOpen(true);
-    console.log(isOpen)
+    console.log(isOpen);
   };
 
   return (
@@ -37,9 +37,9 @@ const HomeItem = ({ item }) => {
           className="card-img-top"
           src={item.productImg}
           alt={item.productName}
-          onClick={() => {navigate(`/productInfo/${item.id}`)
-        }
-        }
+          onClick={() => {
+            navigate(`/productInfo/${item.id}`);
+          }}
         />
       </div>
       <div className="card-body">
@@ -48,12 +48,12 @@ const HomeItem = ({ item }) => {
       </div>
       <div className="flex justify-between items-center m-2 gap-2">
         <button
-          className={`btn w-full btn-primary ${existingItem && 'disabled'}`}
+          className={`btn w-full btn-primary ${existingItem && "disabled"}`}
           onClick={handleAddToOrder}
         >
           {existingItem ? "Go to Bag" : "Add to Bag"}
         </button>
-        {currentUser && currentUser.role === 'admin' && (
+        {currentUser && currentUser.role === "admin" && (
           <>
             <AddItemModel
               isOpen={isOpen}

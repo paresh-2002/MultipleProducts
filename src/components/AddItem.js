@@ -31,7 +31,7 @@ const AddItem = () => {
   });
   const [productImg, setProductImg] = useState(null);
   const [error, setError] = useState("");
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const ProductImgHandler = (e) => {
     if (e.target.files[0]) {
       setProductImg(e.target.files[0]);

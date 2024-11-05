@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
-import { MdShoppingCart, MdAddCircle, MdHome, MdListAlt} from "react-icons/md";
+import { MdShoppingCart, MdAddCircle, MdHome, MdListAlt } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { userActions } from "../store/userSlice";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -36,7 +36,6 @@ const Navbar = () => {
               className="d-flex align-items-center mb-2 gap-2 mb-lg-0 text-white text-decoration-none "
             >
               <img src="/Images/card.png" alt="" width="60" height="60" />
-              
             </Link>
             <ul className="hidden md:flex justify-between text-sm ps-1 ">
               <li>
@@ -50,37 +49,37 @@ const Navbar = () => {
                   </div>
                 </Link>
               </li>
-              
-                <li>
-                  <Link
-                    to="/all-products"
-                    className="nav-link px-2 relative text-white hover:underline hover:underline-white"
+
+              <li>
+                <Link
+                  to="/all-products"
+                  className="nav-link px-2 relative text-white hover:underline hover:underline-white"
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    <MdListAlt />
+                    AllProducts
+                  </div>
+                </Link>
+              </li>
+              {currentUser && (
+                <>
+                  <li>
+                    <Link
+                      to="/orders"
+                      className="nav-link px-2 relative text-white hover:underline hover:underline-white "
                     >
                       <div className="flex items-center justify-center gap-1">
-                      <MdListAlt />
-                        AllProducts
+                        <MdShoppingCart />
+                        Orders
+                        <span className="bg-[#f16565] whitespace-nowrap text-center leading-[18px] h-[18px] relative text-xs text-white font-bold cursor-pointer px-1.5 py-0 rounded-[50%] right-1 top-[-8px]">
+                          {shoppingCart.length}
+                        </span>
                       </div>
-                  </Link>
-                </li>
-                {currentUser && (
-                <>
-                <li>
-                  <Link
-                    to="/orders"
-                    className="nav-link px-2 relative text-white hover:underline hover:underline-white "
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <MdShoppingCart />
-                      Orders
-                      <span className="bg-[#f16565] whitespace-nowrap text-center leading-[18px] h-[18px] relative text-xs text-white font-bold cursor-pointer px-1.5 py-0 rounded-[50%] right-1 top-[-8px]">
-                        {shoppingCart.length}
-                      </span>
-                    </div>
-                  </Link>
-                </li>
+                    </Link>
+                  </li>
                 </>
               )}
-               {/* Admin */}
+              {/* Admin */}
               {currentUser?.role === "admin" && (
                 <>
                   <li>
@@ -94,7 +93,7 @@ const Navbar = () => {
                       </div>
                     </Link>
                   </li>
-                 
+
                   <li>
                     <Link
                       to={"/admin-dashboard"}
@@ -167,12 +166,18 @@ const Navbar = () => {
               )}
             </div>
             <section className="md:hidden cursor-pointer relative z-10000 text-white">
-            <RxHamburgerMenu
-              className="text-lg"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            />
-            {isMenuOpen && <MenuDropdown navigate={navigate} handleLogout={handleLogout} shoppingCart={shoppingCart}/>}
-          </section>
+              <RxHamburgerMenu
+                className="text-lg"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              />
+              {isMenuOpen && (
+                <MenuDropdown
+                  navigate={navigate}
+                  handleLogout={handleLogout}
+                  shoppingCart={shoppingCart}
+                />
+              )}
+            </section>
           </div>
         </div>
       </header>

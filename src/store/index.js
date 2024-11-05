@@ -11,9 +11,8 @@ const store = configureStore({
     fetchStatus: fetchStatusSlice.reducer,
     order: orderSlice.reducer,
     user: userSlice.reducer,
-    userOrder: userOrderSlice.reducer
+    userOrder: userOrderSlice.reducer,
   },
 });
-
 
 export default store;

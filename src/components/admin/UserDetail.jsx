@@ -1,5 +1,4 @@
-const UserDetail = ({getAllUser}) => {
-  
+const UserDetail = ({ getAllUser }) => {
   return (
     <div>
       <div>

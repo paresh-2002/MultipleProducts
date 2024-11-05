@@ -12,8 +12,8 @@ import UserDetail from "./UserDetail";
 const AdminDashboard = () => {
   const { currentUser } = useSelector((state) => state.user);
   const items = useSelector((state) => state.items);
-  const userOrderList = useSelector((state) => state.userOrder)
-  const [getAllUser, setGetAllUser] = useState([])
+  const userOrderList = useSelector((state) => state.userOrder);
+  const [getAllUser, setGetAllUser] = useState([]);
   const [getAllOrder, setGetAllOrder] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const AdminDashboard = () => {
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
           const userOrderData = Object.values(snapshot.val());
-          dispatch(userOrderActions.addUserOrder(userOrderData))
+          dispatch(userOrderActions.addUserOrder(userOrderData));
           setGetAllOrder(userOrderData);
         } else {
           console.log("No order found for the provided ID.");
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error(`Error fetching order: ${error.message}`);
       } finally {
-       setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -62,59 +62,59 @@ const AdminDashboard = () => {
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
           const userOrderData = Object.values(snapshot.val());
-            setGetAllUser(userOrderData);
+          setGetAllUser(userOrderData);
         } else {
           console.log("No order found for the provided ID.");
         }
       } catch (error) {
         console.error(`Error fetching order: ${error.message}`);
       } finally {
-       setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchUserOrders();
   }, [dispatch]);
-  
+
   return (
     <div className="container">
-    {/* Top */}
-    <div className="top mb-3 px-5 ">
-      <div className=" bg-pink-50 py-5 border border-pink-100 rounded-b-lg">
-        <h1 className=" text-center text-2xl font-bold text-pink-500">
-          Admin Dashboard
-        </h1>
+      {/* Top */}
+      <div className="top mb-3 px-5 ">
+        <div className=" bg-pink-50 py-5 border border-pink-100 rounded-b-lg">
+          <h1 className=" text-center text-2xl font-bold text-pink-500">
+            Admin Dashboard
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div className="px-5">
-    <div className="mid mb-5">
-      <div className=" bg-slate-50 py-5 w-full m-auto rounded-b-xl border-0 shadow-xl border-pink-100">
-        <div className="flex justify-center">
-          <img
-            src="https://cdn-icons-png.flaticon.com/128/2202/2202112.png"
-            alt=""
-          />
+      <div className="px-5">
+        <div className="mid mb-5">
+          <div className=" bg-slate-50 py-5 w-full m-auto rounded-b-xl border-0 shadow-xl border-pink-100">
+            <div className="flex justify-center">
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/2202/2202112.png"
+                alt=""
+              />
+            </div>
+            <div className="">
+              <h1 className=" text-center text-lg">
+                <span className=" font-bold">Name : </span>
+                {currentUser?.name}
+              </h1>
+
+              <h1 className=" text-center text-lg">
+                <span className=" font-bold">Email : </span>
+                {currentUser?.email}
+              </h1>
+
+              <h1 className=" text-center text-lg">
+                <span className=" font-bold">Role : </span>
+                {currentUser?.role}
+              </h1>
+            </div>
+          </div>
         </div>
         <div className="">
-          <h1 className=" text-center text-lg">
-            <span className=" font-bold">Name : </span>
-            {currentUser?.name}
-          </h1>
-
-          <h1 className=" text-center text-lg">
-            <span className=" font-bold">Email : </span>
-            {currentUser?.email}
-          </h1>
-
-          <h1 className=" text-center text-lg">
-            <span className=" font-bold">Role : </span>
-            {currentUser?.role}
-          </h1>
-        </div>
-      </div>
-    </div>
-    <div className="">
           <Tabs>
             <TabList className="flex flex-wrap -m-4 text-center justify-center">
               <Tab className="p-4 md:w-1/3 sm:w-1/2 w-full cursor-pointer">
@@ -214,7 +214,11 @@ const AdminDashboard = () => {
             </TabPanel>
 
             <TabPanel>
-              <OrderDetail deleteProduct={deleteProduct} getAllOrder={getAllOrder}  loading={loading}/>
+              <OrderDetail
+                deleteProduct={deleteProduct}
+                getAllOrder={getAllOrder}
+                loading={loading}
+              />
             </TabPanel>
 
             <TabPanel>

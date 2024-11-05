@@ -19,9 +19,7 @@ const Home = () => {
     setSearchVal(e.target.value);
   };
   return (
-    
     <div className="container mx-auto px-4">
-      
       <div className="bg-white z-1 top-[92px] sticky">
         <div className="flex flex-col lg:flex-row justify-between items-center m-2">
           <h2 className="text-2xl font-semibold mb-2 lg:mb-0">PRODUCTS</h2>
@@ -39,7 +37,7 @@ const Home = () => {
                 onChange={handleSearch}
               />
             </div>
-            {currentUser && currentUser.role === 'admin' && (
+            {currentUser && currentUser.role === "admin" && (
               <div className="lg:mt-0 lg:ml-3">
                 <AddItemModel isOpen={isOpen} setIsOpen={setIsOpen} />
                 <button

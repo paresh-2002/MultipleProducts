@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { get, ref } from "firebase/database";
 import { db } from "../FirebaseConfig";
 import { toast } from "react-toastify";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const INITIAL_STATE = {
   currentUser: (() => {
@@ -14,12 +14,12 @@ const INITIAL_STATE = {
       return null;
     }
   })(),
-  status: 'idle',
-  error: null
+  status: "idle",
+  error: null,
 };
 
 export const fetchUserData = createAsyncThunk(
-  'user/fetchUserData',
+  "user/fetchUserData",
   async ({ uid, email }) => {
     try {
       const dbRef = ref(db, `userData/${uid}`);
@@ -51,16 +51,16 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserData.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.currentUser = action.payload;
         Cookies.set("user", JSON.stringify(action.payload), { expires: 1 });
       })
       .addCase(fetchUserData.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       });
   },

@@ -15,7 +15,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AdminDashboard from "../components/admin/AdminDashboard";
 import UserDashboard from "../components/user/UserDashboard";
-import { useSelector } from "react-redux";
 import ProductInfo from "../components/ProductInfo";
 import { ProtectedRouteForAdmin } from "../components/admin/protectedRoute/ProtectedRouteForAdmin";
 import { ProtectedRouteForUser } from "../components/admin/protectedRoute/ProtectedRouteForUser";
@@ -87,9 +86,9 @@ function App() {
               element={
                 <>
                   <ProtectedRouteForAdmin>
-                  <Navbar />
-                  <AdminDashboard />
-                  <Footer />
+                    <Navbar />
+                    <AdminDashboard />
+                    <Footer />
                   </ProtectedRouteForAdmin>
                 </>
               }
@@ -99,9 +98,9 @@ function App() {
               element={
                 <>
                   <ProtectedRouteForUser>
-                  <Navbar />
+                    <Navbar />
                     <UserDashboard />
-                  <Footer />
+                    <Footer />
                   </ProtectedRouteForUser>
                 </>
               }
@@ -111,7 +110,7 @@ function App() {
               element={
                 <>
                   <Navbar />
-                    <ProductInfo/>
+                  <ProductInfo />
                   <Footer />
                 </>
               }

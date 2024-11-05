@@ -60,7 +60,10 @@ const UserForm = ({ isSignInPage = false }) => {
         const user = res.user;
 
         if (user) {
-          await set(dbRef(db, `userData/${user.uid}`), { ...data, uid:user.uid});
+          await set(dbRef(db, `userData/${user.uid}`), {
+            ...data,
+            uid: user.uid,
+          });
           toast.success("Account Created Successfully");
           navigate("/users/sign_in");
           setData({ name: "", email: "", password: "", role, date });
@@ -68,7 +71,9 @@ const UserForm = ({ isSignInPage = false }) => {
       }
     } catch (error) {
       console.error("Authentication Error:", error.code, error.message);
-      setError(errorMessages[error.code] || "Authentication failed. Please try again.");
+      setError(
+        errorMessages[error.code] || "Authentication failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -78,7 +83,13 @@ const UserForm = ({ isSignInPage = false }) => {
     <div className="h-screen flex justify-center items-center">
       <div className="w-[400px] shadow-lg rounded-md p-5 flex flex-col">
         <div className="">
-          <img src="/Images/card.png" alt="" width="80" height="80" className="m-auto" />
+          <img
+            src="/Images/card.png"
+            alt=""
+            width="80"
+            height="80"
+            className="m-auto"
+          />
         </div>
         <h2 className="text-center font-medium text-3xl mb-2">
           {isSignInPage ? "Sign In" : "Sign Up"}
@@ -128,7 +139,9 @@ const UserForm = ({ isSignInPage = false }) => {
             type="submit"
             disabled={loading}
           >
-            <span>{loading ? "Loading..." : (isSignInPage ? "Sign In" : "Sign Up")}</span>
+            <span>
+              {loading ? "Loading..." : isSignInPage ? "Sign In" : "Sign Up"}
+            </span>
           </button>
           {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
         </form>

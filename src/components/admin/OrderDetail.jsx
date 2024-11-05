@@ -1,8 +1,7 @@
 import LoadingSpinner from "../LoadingSpinner";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
-const OrderDetail = ({deleteProduct, getAllOrder, loading}) => {
-  
+const OrderDetail = ({ deleteProduct, getAllOrder, loading }) => {
   return (
     <div>
       <div>
@@ -12,7 +11,7 @@ const OrderDetail = ({deleteProduct, getAllOrder, loading}) => {
         </div>
 
         {/* table  */}
-        <div className="w-full  overflow-x-scroll lg:justify-center  hide-scroll-bar" >
+        <div className="w-full  overflow-x-scroll lg:justify-center  hide-scroll-bar">
           <table className="w-full text-left border border-collapse sm:border-separate border-pink-100 text-pink-400">
             <tbody>
               <tr>

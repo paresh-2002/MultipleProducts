@@ -23,8 +23,6 @@ const HeroSection = () => {
   const filteredProducts = items.filter((product) =>
     product?.category?.toLowerCase().includes(searchVal.toLowerCase())
   );
-  console.log(filteredProducts);
-
   const handleSearch = (e) => {
     setSearchVal(e.target.value);
   };
