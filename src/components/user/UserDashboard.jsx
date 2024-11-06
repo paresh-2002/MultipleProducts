@@ -8,7 +8,6 @@ const UserDashboard = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [userOrderList, setUserOrderList] = useState([]);
-  console.log(userOrderList);
 
   useEffect(() => {
     const fetchUserOrders = async () => {

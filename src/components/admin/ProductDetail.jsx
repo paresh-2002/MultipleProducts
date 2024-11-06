@@ -35,7 +35,7 @@ const ProductDetail = () => {
       }
     };
     getAllProducts();
-  }, []);
+  }, [dispatch]);
   // navigate
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ const ProductDetail = () => {
         <h1 className=" text-xl text-pink-300 font-bold">All Product</h1>
         {/* Add Product Button  */}
         <Link
-          to={"/add_item"}
+          to={"/add-item"}
           className="px-5 py-2 bg-pink-50 border border-pink-100 no-underline rounded-lg text-gray-700"
         >
           <button className=" flex justify-center items-center gap-1">
