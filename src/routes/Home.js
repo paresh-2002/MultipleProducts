@@ -1,23 +1,44 @@
 import HomeItem from "../components/HomeItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItemModel from "../components/Model";
 import { MdAddBox } from "react-icons/md";
+import itemsService from "../services/ItemsService";
+import { itemsActions } from "../store/itemsSlice";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
-  const items = useSelector((store) => store.items);
-  const fetchStatus = useSelector((store) => store.fetchStatus);
   const [searchVal, setSearchVal] = useState("");
+
   const currentUser = useSelector((state) => state.user.currentUser);
+
+  const [items,setItems] =useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+      const res = await itemsService.getAllProducts();
+      dispatch(itemsActions.addInitialItems(res));
+      setItems(res);
+    })();
+}, [dispatch]);
   const filteredProducts = items.filter((product) =>
+
     product?.productName?.toLowerCase().includes(searchVal.toLowerCase())
   );
+  const [fetchStatus, setFetchStatus] = useState(true);
+  
+   useEffect(() => {
+    setTimeout(() => {
+      setFetchStatus(false);
+    }, 2000);
+   },[]);
+
   const handleSearch = (e) => {
     setSearchVal(e.target.value);
   };
+
   return (
     <div className="container mx-auto px-4">
       <div className="bg-white z-1 top-[92px] sticky">
@@ -56,7 +77,7 @@ const Home = () => {
 
       {filteredProducts.length === 0 ? (
         <div className="flex items-center justify-center py-4">
-          {fetchStatus.currentlyFetching ? (
+          {fetchStatus ? (
             <LoadingSpinner />
           ) : (
             <p>No products found</p>

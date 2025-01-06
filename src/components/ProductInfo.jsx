@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { OrderActions } from "../store/orderSlice";
-import { get, ref } from "firebase/database";
-import { db } from "../FirebaseConfig";
 import { toast } from "react-toastify";
+import itemsService from "../services/ItemsService";
 
 const ProductInfo = () => {
   const [loading, setLoading] = useState(false);
@@ -14,15 +13,15 @@ const ProductInfo = () => {
   const [product, setProduct] = useState("");
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
+  
   useEffect(() => {
     const getProductData = async () => {
       setLoading(true);
-      const dbRef = ref(db, `products/${id}`);
-      const snapshot = await get(dbRef);
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        setProduct(data);
+      const res = await itemsService.getProduct({ id });
+      if (!res) {
+        console.log(false);
       }
+      setProduct(res);
     };
     getProductData();
     setLoading(false);

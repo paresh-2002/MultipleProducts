@@ -172,6 +172,7 @@ const Navbar = () => {
               />
               {isMenuOpen && (
                 <MenuDropdown
+                  setIsMenuOpen = {setIsMenuOpen}
                   navigate={navigate}
                   handleLogout={handleLogout}
                   shoppingCart={shoppingCart}

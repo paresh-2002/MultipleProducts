@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-import { db, storage } from "../FirebaseConfig";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
-import { ref as dbRef, set } from "firebase/database";
-import { v4 as uuidv4 } from "uuid";
 import LoadingSpinner from "./LoadingSpinner";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import itemsService from "../services/ItemsService";
 
 const categoryList = [
   { name: "fashion" },
@@ -27,11 +20,12 @@ const AddItem = () => {
   const [product, setProduct] = useState({
     productName: "",
     productPrice: "",
-    category: "",
+    category: "home",
   });
   const [productImg, setProductImg] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const ProductImgHandler = (e) => {
     if (e.target.files[0]) {
       setProductImg(e.target.files[0]);
@@ -42,39 +36,21 @@ const AddItem = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { productName, productPrice, category } = product;
+    const { productName, productPrice } = product;
     if (!productName || !productPrice || !productImg) {
       setError("All fields must be filled correctly.");
       setLoading(false);
       return;
     }
 
-    try {
-      const productId = uuidv4();
-      const imageRef = storageRef(storage, `images/${productId}`);
-      await uploadBytes(imageRef, productImg);
-      const url = await getDownloadURL(imageRef);
-
-      const productData = {
-        id: productId,
-        productName,
-        productPrice: Number(productPrice),
-        productImg: url,
-        category,
-      };
-      await set(dbRef(db, `products/${productId}`), productData);
-      setProduct({ productName: "", productPrice: "" });
-      setProductImg(null);
-      setError("");
-      document.getElementById("product_img").value = "";
+    const res = await itemsService.addProduct({ product, productImg });
+    if (res) {
       toast.success("Product added successfully");
       navigate("/admin-dashboard");
-    } catch (error) {
-      console.error("Error adding product:", error.message);
+    } else {
       setError("Failed to add product. Please try again.");
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (

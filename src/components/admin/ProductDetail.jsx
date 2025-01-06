@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { get, ref, remove } from "firebase/database";
-import { db } from "../../FirebaseConfig";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
@@ -9,6 +7,7 @@ import AddItemModel from "../Model";
 import { MdAddCircle, MdEdit } from "react-icons/md";
 import { itemsActions } from "../../store/itemsSlice";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import itemsService from "../../services/ItemsService";
 
 const ProductDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -16,46 +15,43 @@ const ProductDetail = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [getAllProduct, setGetAllProduct] = useState([]);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    const getAllProducts = async () => {
+    (async () => {
       try {
-        const dbRef = ref(db, "products/");
-        const snapshot = await get(dbRef);
-        if (snapshot.exists()) {
-          const data = Object.values(snapshot.val());
-          dispatch(itemsActions.addInitialItems(data));
-          setGetAllProduct(data);
-        } else {
-          console.error("Fetched data is empty.");
-        }
+        setLoading(true);
+        const res = await itemsService.getAllProducts();
+        dispatch(itemsActions.addInitialItems(res));
+        setGetAllProduct(res);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching products:', error);
+        toast.error("Failed to fetch products");
       } finally {
+        setLoading(false);
       }
-    };
-    getAllProducts();
+    })();
   }, [dispatch]);
-  // navigate
-  const navigate = useNavigate();
-
+  
   const handleEdit = (item) => {
     setCurrentItem(item);
     setIsOpen(true);
   };
-  // Delete product
+  
   const deleteProduct = async (id) => {
-    setLoading(true);
     try {
-      const dbRef = ref(db, `products/${id}`);
-      await remove(dbRef);
+      const res = await itemsService.deleteProduct(id);
+      if (!res) {
+        toast.error("Product not found");
+        return;
+      }
+      setGetAllProduct((prev) => prev.filter((item) => item.id !== id));
       toast.success("Product removed successfully");
       dispatch(itemsActions.removeProduct(id));
     } catch (error) {
       console.log(error);
+      toast.error("Failed to remove product");
     }
-    setLoading(false);
   };
+  
   return (
     <div>
       <div className="py-5 flex justify-between items-center">
@@ -128,11 +124,11 @@ const ProductDetail = () => {
                 Action
               </th>
             </tr>
-            {getAllProduct.map((item, index) => {
+            {getAllProduct?.map((item, index) => {
               const { id, productName, productPrice, category, productImg } =
                 item;
               return (
-                <tr key={index} className="text-pink-300">
+                <tr key={item.id} className="text-pink-300">
                   <td className="h-12 px-6 text-md transition duration-300 border-t border-l first:border-l-0 border-pink-100 stroke-slate-500 text-slate-500 ">
                     {index + 1}.
                   </td>
@@ -169,7 +165,7 @@ const ProductDetail = () => {
                   </td>
                   <td
                     onClick={() => deleteProduct(id)}
-                    className="h-12 px-6 text-md transition duration-300 border-t border-l first:border-l-0 border-pink-100 stroke-slate-500 text-slate-500 text-red-500 cursor-pointer "
+                    className="h-12 px-6 text-md transition duration-300 border-t border-l first:border-l-0 border-pink-100 stroke-slate-500  text-red-500 cursor-pointer "
                   >
                     <button
                       type="button"
@@ -189,9 +185,9 @@ const ProductDetail = () => {
               <LoadingSpinner />
             </div>
           ) : (
-            getAllProduct.length === 0 && (
+            getAllProduct?.length === 0 && (
               <div className="flex justify-center mt-5">
-                <p>Order Not Found</p>
+                <p>Products Not Found</p>
               </div>
             )
           )}

@@ -27,7 +27,6 @@ const HomeItem = ({ item }) => {
   const handleEdit = () => {
     setCurrentItem(item);
     setIsOpen(true);
-    console.log(isOpen);
   };
 
   return (

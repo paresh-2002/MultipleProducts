@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import bannerImg from "../../assets/bannerImg.png";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import LoadingSpinner from "../LoadingSpinner";
 import HomeItem from "../HomeItem";
 import { BiFilter } from "react-icons/bi";
+import itemsService from "../../services/ItemsService";
+import { itemsActions } from "../../store/itemsSlice";
 
 const categoryList = [
   { name: "fashion" },
@@ -17,12 +19,26 @@ const categoryList = [
   { name: "books" },
 ];
 const HeroSection = () => {
-  const items = useSelector((store) => store.items);
-  const fetchStatus = useSelector((store) => store.fetchStatus);
   const [searchVal, setSearchVal] = useState("home");
-  const filteredProducts = items.filter((product) =>
+  const [items,setItems] =useState();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+      const res = await itemsService.getAllProducts();
+      dispatch(itemsActions.addInitialItems(res));
+      setItems(res);
+    })();
+}, [dispatch]);
+  const filteredProducts = items?.filter((product) =>
     product?.category?.toLowerCase().includes(searchVal.toLowerCase())
-  );
+);
+const [fetchStatus, setFetchStatus] = useState(true);
+
+ useEffect(() => {
+  setTimeout(() => {
+    setFetchStatus(false);
+  }, 2000);
+ },[]);
   const handleSearch = (e) => {
     setSearchVal(e.target.value);
   };
@@ -74,7 +90,7 @@ const HeroSection = () => {
                       className="form-control border-0 cursor-pointer rounded-md py-2 outline-none "
                     >
                       <option disabled>Select Product Category</option>
-                      {categoryList.map((value, index) => (
+                      {categoryList?.map((value, index) => (
                         <option key={index} value={value.name}>
                           {value.name}
                         </option>
@@ -89,9 +105,9 @@ const HeroSection = () => {
           <hr className="my-2" />
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {filteredProducts?.length === 0 ? (
           <div className="flex items-center justify-center py-4">
-            {fetchStatus.currentlyFetching ? (
+            {fetchStatus ? (
               <LoadingSpinner />
             ) : (
               <p>No products found</p>
@@ -99,7 +115,7 @@ const HeroSection = () => {
           </div>
         ) : (
           <div className="flex flex-wrap gap-2 justify-center">
-            {filteredProducts.map((item) => (
+            {filteredProducts?.map((item) => (
               <HomeItem key={item.id} item={item} />
             ))}
           </div>

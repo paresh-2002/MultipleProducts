@@ -25,8 +25,8 @@ export const fetchUserData = createAsyncThunk(
       const dbRef = ref(db, `userData/${uid}`);
       const snapshot = await get(dbRef);
       if (snapshot.exists()) {
-        toast.success("Login Successful");
         const userData = { ...snapshot.val(), uid, email };
+        
         return userData;
       } else {
         throw new Error("No user data found.");
@@ -58,6 +58,7 @@ const userSlice = createSlice({
         state.status = "succeeded";
         state.currentUser = action.payload;
         Cookies.set("user", JSON.stringify(action.payload), { expires: 1 });
+        toast.success("Login Successful");
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.status = "failed";

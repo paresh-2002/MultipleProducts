@@ -6,7 +6,6 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Fetchitems from "../components/Fetchitems";
 import UserForm from "../components/UserForm";
 import Home from "./Home";
 import Card from "./Card";
@@ -19,18 +18,19 @@ import ProductInfo from "../components/ProductInfo";
 import { ProtectedRouteForAdmin } from "../components/admin/protectedRoute/ProtectedRouteForAdmin";
 import { ProtectedRouteForUser } from "../components/admin/protectedRoute/ProtectedRouteForUser";
 import HeroSection from "../components/heroSection/HeroSection";
+import { useSelector } from "react-redux";
 
-// const RequireAuth = ({ children }) => {
-//   const currentUser = useSelector((state) => state.user.currentUser);
-//   return currentUser ? children : <Navigate to="/users/sign-in" />;
-// };
+const RequireAuth = ({ children }) => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+  return currentUser ? children : <Navigate to="/users/sign-in" />;
+};
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/">
+          
             <Route
               path="/users/sign-in"
               element={<UserForm isSignInPage={true} />}
@@ -39,46 +39,43 @@ function App() {
               path="/users/sign-up"
               element={<UserForm isSignInPage={false} />}
             />
-            <Route
-              index
+            <Route path="/"
               element={
-                <>
+                <RequireAuth>
                   <Navbar />
                   <HeroSection />
-                  <Fetchitems />
                   <Footer />
-                </>
-              }
-            />
+                </RequireAuth>
+              }/>
+            
             <Route
-              path="all-products"
+              path="/all-products"
               element={
-                <>
+                <RequireAuth>
                   <Navbar />
                   <Home />
-                  <Fetchitems />
                   <Footer />
-                </>
+                </RequireAuth>
               }
             />
             <Route
               path="/orders"
               element={
-                <>
+                <RequireAuth>
                   <Navbar />
                   <Card />
                   <Footer />
-                </>
+                </RequireAuth>
               }
             />
             <Route
               path="/add-item"
               element={
-                <>
+                <RequireAuth>
                   <Navbar />
                   <AddItem />
                   <Footer />
-                </>
+                </RequireAuth>
               }
             />
             <Route
@@ -115,7 +112,6 @@ function App() {
                 </>
               }
             />
-          </Route>
           {/* Redirect to home if route not found */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

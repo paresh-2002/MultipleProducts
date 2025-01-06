@@ -127,11 +127,10 @@ const OrderDetail = ({ deleteProduct, getAllOrder, loading }) => {
                   Action
                 </th>
               </tr>
-              {getAllOrder.map((order) => {
-                // console.log(order);
+              {getAllOrder?.map((order) => {
                 return (
                   <>
-                    {order.products.map((item, index) => {
+                    {order.products?.map((item, index) => {
                       const {
                         id,
                         category,

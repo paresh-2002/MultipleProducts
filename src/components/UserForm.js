@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
@@ -8,8 +8,9 @@ import {
 import { auth, db } from "../FirebaseConfig";
 import { ref as dbRef, set } from "firebase/database";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../store/userSlice";
+import LoadingSpinner from "./LoadingSpinner";
 
 const errorMessages = {
   "auth/email-already-in-use": "The email address is already in use.",
@@ -38,6 +39,17 @@ const UserForm = ({ isSignInPage = false }) => {
   const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/user-dashboard");
+      }
+    }
+  }, [currentUser, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,8 +64,6 @@ const UserForm = ({ isSignInPage = false }) => {
         const user = res.user;
         if (user) {
           dispatch(fetchUserData({ uid: user.uid, email: user.email, role }));
-          // localStorage.setItem("users", JSON.stringify(user));
-          navigate("/");
         }
       } else {
         const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -140,7 +150,7 @@ const UserForm = ({ isSignInPage = false }) => {
             disabled={loading}
           >
             <span>
-              {loading ? "Loading..." : isSignInPage ? "Sign In" : "Sign Up"}
+              {loading ? <LoadingSpinner /> : isSignInPage ? "Sign In" : "Sign Up"}
             </span>
           </button>
           {error && <p className="text-red-500 mt-2 text-center">{error}</p>}

@@ -1,15 +1,8 @@
 import { MdClose } from "react-icons/md";
 import React, { useState, useEffect } from "react";
-import { db, storage } from "../FirebaseConfig";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
-import { ref as dbRef, set, update } from "firebase/database";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./LoadingSpinner";
+import itemsService from "../services/ItemsService";
 
 const categoryList = [
   { name: "fashion" },
@@ -59,44 +52,21 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { productName, productPrice, category } = formData;
+    const { productName, productPrice } = formData;
     if (!productName || !productPrice) {
       setError("All fields must be filled correctly.");
       return;
     }
     try {
-      if (item) {
-        let imageUrl = existingImg;
-        if (productImg) {
-          const imageRef = storageRef(storage, `images/${item.id}`);
-          await uploadBytes(imageRef, productImg);
-          imageUrl = await getDownloadURL(imageRef);
+
+      const res = await itemsService.updateProduct({item,existingImg,formData, productImg})
+      if(res){
+        if(productImg){
+          toast.success("Product updated successfully");
+        }else{
+          toast.success("Product added successfully");
         }
-        await update(dbRef(db, `products/${item.id}`), {
-          productName,
-          productPrice: Number(productPrice),
-          category,
-          productImg: imageUrl,
-        });
-        toast.success("Product updated successfully");
-      } else {
-        const productId = uuidv4();
-        const imageRef = storageRef(storage, `images/${productId}`);
-        await uploadBytes(imageRef, productImg);
-        const url = await getDownloadURL(imageRef);
-
-        const productData = {
-          id: productId,
-          productName,
-          productPrice: Number(productPrice),
-          category,
-          productImg: url,
-        };
-
-        await set(dbRef(db, `products/${productId}`), productData);
-        toast.success("Product added successfully");
       }
-
       setFormData({ productName: "", productPrice: "" });
       setProductImg(null);
       setExistingImg("");
@@ -105,7 +75,6 @@ const AddItemModel = ({ setIsOpen, isOpen, item }) => {
       document.getElementById("productImg").value = "";
       window.location.reload();
     } catch (error) {
-      console.error("Error handling product:", error.message);
       setError("Failed to handle product. Please try again.");
     }
   };

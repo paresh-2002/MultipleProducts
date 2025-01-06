@@ -4,10 +4,9 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import ProductDetail from "./ProductDetail";
 import OrderDetail from "./OrderDetail";
 import { userOrderActions } from "../../store/userOrderSlice";
-import { get, ref, remove } from "firebase/database";
-import { db } from "../../FirebaseConfig";
 import { toast } from "react-toastify";
 import UserDetail from "./UserDetail";
+import itemsService from "../../services/ItemsService";
 
 const AdminDashboard = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -22,21 +21,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUserOrders = async () => {
       setLoading(true);
-      try {
-        const dbRef = ref(db, `orderUserData/`);
-        const snapshot = await get(dbRef);
-        if (snapshot.exists()) {
-          const userOrderData = Object.values(snapshot.val());
-          dispatch(userOrderActions.addUserOrder(userOrderData));
-          setGetAllOrder(userOrderData);
-        } else {
-          console.log("No order found for the provided ID.");
-        }
-      } catch (error) {
-        console.error(`Error fetching order: ${error.message}`);
-      } finally {
-        setLoading(false);
+      const res = await itemsService.fetchUserOrders();
+      if (!res) {
+        console.log(false);
       }
+      dispatch(userOrderActions.addUserOrder(res));
+      setGetAllOrder(res);
+      setLoading(false);
     };
 
     fetchUserOrders();
@@ -44,8 +35,12 @@ const AdminDashboard = () => {
 
   const deleteProduct = async (id) => {
     try {
-      const dbRef = ref(db, `orderUserData/${id}`);
-      await remove(dbRef);
+      const res = await itemsService.deleteUserOrders(id);
+      if (!res) {
+        toast.error("Product not found");
+        return;
+      }
+      setGetAllOrder((prev) => prev.filter((item) => item.id !== id));
       toast.success("Product removed successfully");
       dispatch(userOrderActions.removeUserOrder(id));
     } catch (error) {
@@ -55,25 +50,17 @@ const AdminDashboard = () => {
 
   // userDetails
   useEffect(() => {
-    const fetchUserOrders = async () => {
+    const userDetails = async () => {
       setLoading(true);
-      try {
-        const dbRef = ref(db, `userData/`);
-        const snapshot = await get(dbRef);
-        if (snapshot.exists()) {
-          const userOrderData = Object.values(snapshot.val());
-          setGetAllUser(userOrderData);
-        } else {
-          console.log("No order found for the provided ID.");
-        }
-      } catch (error) {
-        console.error(`Error fetching order: ${error.message}`);
-      } finally {
-        setLoading(false);
+      const res = await itemsService.userDetails();
+      if (!res) {
+        console.log(false);
       }
+      setGetAllUser(res);
+      setLoading(false);
     };
 
-    fetchUserOrders();
+    userDetails();
   }, [dispatch]);
 
   return (
@@ -222,7 +209,7 @@ const AdminDashboard = () => {
             </TabPanel>
 
             <TabPanel>
-              <UserDetail getAllUser={getAllUser} />
+              <UserDetail getAllUser={getAllUser} loading={loading} />
             </TabPanel>
           </Tabs>
         </div>

@@ -4,12 +4,21 @@ const itemsSlice = createSlice({
   name: "items",
   initialState: [],
   reducers: {
+    // Action to add initial items to the state
     addInitialItems: (state, action) => {
-      return action.payload;
+      return action.payload;  // Replaces state with the fetched list of products
     },
+
     removeProduct: (state, action) => {
-      console.log(action.payload);
-      state.filter((itemId) => itemId !== action.payload);
+      const productId = action.payload; 
+      const productExists = state.some((item) => item.id === productId); 
+
+      if (!productExists) {
+        console.warn(`Product with ID ${productId} not found.`); 
+      }
+
+      // Filter out the product with the matching ID
+      return state.filter((product) => product.id !== productId);
     },
   },
 });

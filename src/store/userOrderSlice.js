@@ -8,8 +8,14 @@ const userOrderSlice = createSlice({
       return action.payload;
     },
     removeUserOrder: (state, action) => {
-      console.log(action.payload);
-      state.filter((itemId) => itemId !== action.payload);
+      const productId = action.payload; 
+      const productExists = state.some((item) => item.id === productId); 
+
+      if (!productExists) {
+        console.warn(`Product with ID ${productId} not found.`); 
+      }
+
+      return state.filter((product) => product.id !== productId);
     },
   },
 });
