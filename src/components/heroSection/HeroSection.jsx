@@ -44,32 +44,32 @@ const [fetchStatus, setFetchStatus] = useState(true);
   };
   return (
     <div className="container mx-auto px-4">
-      <section className="h-[500px] bg-hero bg-no-repeat bg-cover bg-center py-20">
-        <div className="container mx-auto flex justify-around h-full">
-          {/* text */}
-          <div className="flex items-center justify-between">
-            <div className="">
-              <div className="font-semibold flex items-center uppercase">
-                <div className="w-10 h-[2px] mr-3 bg-cyan-700"></div>Hot Trend
-              </div>
-              <h1 className="uppercase text-[55px] md:text-[70px] leading-[1.1] font-semibold mb-4">
-                Fresh Fashion Finds
-                <br />
-                <span className="font-light">new collection</span>
-              </h1>
-              <Link
-                to={"/all-products"}
-                className="self-start uppercase font-semibold border-b-2 border-primary"
-              >
-                Discover More
-              </Link>
-            </div>
-            <div className="w-1/2">
-              <img src={bannerImg} alt="bannerImg" className="w-2/3 h-full" />
-            </div>
-          </div>
+      <section className="h-[500px] md:h-[600px] lg:h-[700px] bg-hero bg-no-repeat bg-cover bg-center py-20">
+  <div className="container mx-auto flex flex-col md:flex-row justify-around h-full">
+    {/* text */}
+    <div className="flex flex-col md:flex-row items-center justify-between ">
+      <div className="w-full md:w-1/2 text-center md:text-left">
+        <div className="font-semibold flex items-center uppercase justify-center md:justify-start">
+          <div className="w-10 h-[2px] mr-3 bg-cyan-700"></div>Hot Trend
         </div>
-      </section>
+        <h1 className="uppercase text-[40px] md:text-[55px] lg:text-[70px] leading-[1.1] font-semibold mb-4">
+          Fresh Fashion Finds
+          <br />
+          <span className="font-light">new collection</span>
+        </h1>
+        <Link
+          to={"/all-products"}
+          className="self-start uppercase font-semibold border-b-2 border-primary"
+        >
+          Discover More
+        </Link>
+      </div>
+      <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+        <img src={bannerImg} alt="bannerImg" className="w-2/3 md:w-full h-auto" />
+      </div>
+    </div>
+  </div>
+</section>
       <div className="container mx-auto px-4 ">
         <div className="bg-white z-1 top-[92px] sticky">
           <div className="flex flex-col lg:flex-row justify-between items-center m-2">
