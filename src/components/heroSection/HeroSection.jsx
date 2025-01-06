@@ -44,11 +44,11 @@ const HeroSection = () => {
   };
   return (
     <div className="container mx-auto px-4">
-      <section className="h-[500px] md:h-[600px] lg:h-[700px] bg-hero bg-no-repeat bg-cover bg-center py-20">
+      <section className="h-[500px] md:h-[600px] lg:h-[700px] bg-hero bg-no-repeat bg-cover bg-center">
         <div className="container mx-auto flex flex-col md:flex-row justify-around h-full">
           {/* text */}
           <div className="flex flex-col md:flex-row items-center justify-between ">
-            <div className="w-full md:w-1/2 text-start md:text-left">
+            <div className="order-2 md:order-1 w-full md:w-1/2 text-start md:text-left">
               <div className="font-semibold flex items-center uppercase justify-center md:justify-start">
                 <div className="w-10 h-[2px] mr-3 bg-cyan-700"></div>Hot Trend
               </div>
@@ -64,7 +64,7 @@ const HeroSection = () => {
                 Discover More
               </Link>
             </div>
-            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+            <div className="md:order-2 w-full md:w-1/2 flex justify-center md:justify-end">
               <img
                 src={bannerImg}
                 alt="bannerImg"
